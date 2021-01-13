@@ -1,0 +1,51 @@
+
+
+def apriori(TDB,supMin):
+    """ TDB is the input database List of {set of items} """
+    """ subMin is ......... """
+    dic = dict()
+    keys = set()
+    for s in TDB:
+        for element in s:
+            keys.add(frozenset(element))
+    keys = list(keys)
+
+    while len(keys)>=1:
+        dic.clear()
+        for key in keys:
+            f = getFreq(TDB,key)
+            if f >= supMin:
+                dic[key]=f
+        printItemSet(dic)   
+        keys = list(dic.keys())
+        newKeys = set()
+        for i in range (0,len(keys)-1):
+            for j in range(i+1,len(keys)):
+                newKey = frozenset.union(keys[i],keys[j])
+                newKeys.add(newKey)
+        keys = newKeys
+    return dic
+
+
+def getFreq(TDB,key):
+    """ TDB is the input data base List of {set of items} """
+    """ key is set of subitems to count frequancy of repeatation this key in the TDB """
+    freq = 0
+    for items in TDB:
+        exist = True
+        for element in key:
+            if element not in items:
+                exist = False
+                break
+        if exist:
+            freq+=1
+    return freq
+
+def printItemSet(dict):
+    print("---------")
+    for s,f in dict.items():
+        for e in s:
+            print(e,end=" ")
+        print(f)
+
+print (apriori([{'A','C','D'},{'B','C','E'},{'A','B','C','E'},{'B','E'}],2))
